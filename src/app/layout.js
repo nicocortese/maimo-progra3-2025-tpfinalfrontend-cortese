@@ -1,14 +1,27 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Blinker } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
+import { PageContextProvider } from "@/contexts/PageContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const blinker = Blinker({
+  variable: "--font-blinker",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const bolde = localFont({
+  src: [
+    {
+      path: "../fonts/BOLDE.ttf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-bolde",
 });
 
 export const metadata = {
@@ -19,10 +32,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${blinker.variable} ${bolde.variable} antialiased`}>
+        <PageContextProvider>
+          <Navbar />
+          <Sidebar />
+          <main className="pt-20 w-full min-h-screen flex flex-col relative">
+            <div className="w-full max-w-[1600px] mx-auto flex-1">
+              {children}
+            </div>
+          <Footer />
+          </main>
+        </PageContextProvider>
       </body>
     </html>
   );
