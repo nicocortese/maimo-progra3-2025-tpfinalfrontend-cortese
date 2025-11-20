@@ -11,9 +11,9 @@ export default function Navbar () {
     <nav className="fixed top-0 left-0 w-full h-20 bg-[#FEFCF4] z-40 flex items-center justify-between px-6 shadow-sm">
       <button
       onClick={toggleSidebar}
-      className="p-2 text-[#272727] hover:bg-gray-200 rounded-full transition-colors"
+      className="p-2 bg-[#dac07d] text-[#272727] rounded-full hover:brightness-110 transition-all shadow-sm"
       >
-        <HiBars3 className="w-8 h-8 cursor-pointer" />
+        <HiBars3 className="w-8 h-8 cursor-pointer "/>
         </button>
       <div className="absolute left-1/2 transform -translate-x-1/2 pt-2">
         <Image
@@ -23,6 +23,7 @@ export default function Navbar () {
         height={180}
         priority
         className="object-contain"
+        
         />
       </div>
     </nav>

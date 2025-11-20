@@ -9,6 +9,8 @@ import {
 } from "react";
 
 import axios from "axios";
+import { FaHeart } from "react-icons/fa";
+
 
 const PageContext = createContext();
 
@@ -19,6 +21,7 @@ const [categories, setCategories] = useState([]);
 const [favorites, setFavorites] = useState([]);
 const [loading, setLoading] = useState(false);
 const [sidebarOpen, setSidebarOpen] = useState(false);
+
 
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -38,7 +41,7 @@ const getAthletes = useCallback(async () => {
   }
 }, []);
 
-const getOneAthlete = useCallback(async () => {
+const getOneAthlete = useCallback(async (id) => {
   try {
     setLoading(true);
     const res = await axios.get(`${API_URL}/athletes/${id}`);
@@ -62,23 +65,25 @@ const getCategories = useCallback(async () => {
   }
 }, []);
 
-const addFavorite = useCallback(async (athlete) => {
-  try {
-    const body = {
-      athlete: athlete.name,
-      image: athlete.image,
-      discipline: athlete.discipline,
-    }
-    const res = await axios.post(`${API_URL}/favorites`, body);
-    setFavorites((prev) => [...prev, res.data.favorite])
-  } catch (error) {
-    console.log(error)
-  }
-});
+const addFavorite = useCallback((item) => {
+    const exists = favorites.some((fav) => fav.athlete === athlete.name  || fav.athlete === item.name);
+    if(exists) return;
 
-const removeFavorite = useCallback((athleteName) => {
-  setFavorites((prev) => prev.filter((f) => f.athlete !== athleteName));
-}, [])
+    const body = {
+      athlete: item.name || item.athlete,
+      image: item.image,
+      discipline: item.discipline || item.category?.[0],
+      country: item.country,
+      _id: item._id || item.athlete || item.name
+    }
+
+    setFavorites(prev => [...prev, body]);
+  }, [favorites])
+
+    const removeFavorite = useCallback((athleteName) => {
+    setFavorites(prev => prev.filter(f => f.athlete !== athleteName));
+  }, []);
+
 
 useEffect(() => {
   getAthletes();

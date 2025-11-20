@@ -72,18 +72,18 @@ const EventsList = () => {
           </div>
       )
     ))}
-    {athletes && athletes.map((ath, index) => {
+    {athletes && athletes.map((ath, index) => (
       index < 5 && (
         <div key={`ath-${index}`} className="shrink-0">
           <EventCard
           item={ath}
           type="athlete"
           isFavorite={checkIsFavorite(ath.name)}
-          onToggleFavorite={handleFavoriteClick}
+          onToggleFavorite={handleToggleFavorite}
           />
           </div>
       )
-    })}
+    ))}
       </div>
   </section>
  )
