@@ -2,81 +2,69 @@
 
 import { usePageContext } from "@/contexts/PageContext";
 import AthleteCard from "./AthleteCard";
-import Link from "next/link";
-import { HiArrowRight } from "react-icons/hi2";
 
 const AthleteGrid = () => {
-  const { athletes, categories, favorites, addFavorite, removeFavorite } = usePageContext();
+  const { athletes, categories } = usePageContext();
 
-  
-  const electedPositions = [6, 8, 10, 14, 16, 18, 20, 15];
+  if (!athletes || athletes.length === 0) {
+    return <div className="text-[#fefcf4] text-center py-20">Cargando atletas...</div>;
+  }
 
-  const featuredAthletes = electedPositions
-    .map(index => athletes[index])
-    .filter(athlete => athlete);
+  return (
+    <section className="w-full py-16 px-6 md:px-16 lg:px-24 mx-auto">
+      
+      <div className="mb-12">
+         <h2 className="text-3xl md:text-4xl font-bold text-[#fefcf4] uppercase tracking-tight border-l-4 border-[#dac07d] pl-6">
+           Nuestros Atletas
+         </h2>
+      </div>
 
-  let athleteCardsList = null;
-
-  if (featuredAthletes.length > 0) {
-    athleteCardsList = (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {featuredAthletes.map((athlete, index) => {
-          const matchCategory = categories.find(cat => cat.name === athlete.discipline);
-          const disciplineImage = matchCategory ? matchCategory.image : null;
-
-     
-          const isFavorite = favorites.some(fav => fav._id === athlete._id || fav.athlete === athlete.name);
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {athletes.map((athlete) => {
           
-          const toggleFavorite = () => {
-            if (isFavorite) {
-              removeFavorite(athlete._id || athlete.name);
-            } else {
-              addFavorite({
-                athlete: athlete.name,
-                image: athlete.image,
-                discipline: athlete.discipline,
-                country: athlete.country,
-                _id: athlete._id || athlete.name, 
-              });
-            }
-          };
+          let disciplineImg = null;
+          let countryImg = null;
+          
+          // Normalizamos el nombre del país para comparar (minúsculas y sin espacios)
+          const athleteCountry = (athlete.country || "").trim().toLowerCase();
+
+          // --- LÓGICA SIMPLE PARA FOTOS ---
+          if (athlete.categories && athlete.categories.length > 0) {
+            athlete.categories.forEach(item => {
+              
+              // Paso A: Intentamos obtener la categoría real
+              let categoryData = null;
+
+              // Si el item ya tiene nombre, úsalo. Si no, búscalo por ID en la lista global.
+              if (item.name) {
+                categoryData = item;
+              } else if (categories) {
+                categoryData = categories.find(c => c._id === item);
+              }
+
+              // Paso B: Si tenemos datos, asignamos la imagen
+              if (categoryData && categoryData.name) {
+                const catName = categoryData.name.trim().toLowerCase();
+
+                if (catName === athleteCountry) {
+                  countryImg = categoryData.image; // Es la bandera
+                } else {
+                  disciplineImg = categoryData.image; // Es la disciplina (Automático)
+                }
+              }
+            });
+          }
 
           return (
             <AthleteCard
-              key={athlete._id || `${athlete.name}-${index}`} 
+              key={athlete._id}
               athlete={athlete}
-              disciplineImage={disciplineImage}
-              isFavorite={isFavorite}
-              onToggleFavorite={toggleFavorite}
+              disciplineImage={disciplineImg}
+              countryImage={countryImg}
             />
           );
         })}
       </div>
-    );
-  }
-
-  return (
-    <section className="w-full py-8 px-4 md:px-0">
-      <div className="flex justify-between items-end mb-8 px-4 md:px-0">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#fefcf4]">
-            Atletas Destacados
-          </h2>
-          <p className="text-sm text-[#fefcf4]/60 mt-1 hidden md:block">
-            Selección manual de las figuras de París 2024.
-          </p>
-        </div>
-
-        <Link
-          href="#"
-          className="flex items-center gap-2 text-[#dac07d] text-sm font-semibold hover:text-white transition-colors group"
-        >
-          Ver todos <HiArrowRight className="group-hover:translate-x-1 transition-transform"/>
-        </Link>
-      </div>
-
-      {athleteCardsList}
     </section>
   );
 };

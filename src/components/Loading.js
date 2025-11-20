@@ -4,7 +4,7 @@ const Loading = () => {
       <circle
         fill="none"
         strokeOpacity="1"
-        stroke="#FF156D"
+        stroke="#DAC07D"
         strokeWidth=".5"
         cx="100"
         cy="100"

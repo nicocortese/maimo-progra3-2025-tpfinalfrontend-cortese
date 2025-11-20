@@ -3,90 +3,78 @@
 import { useEffect } from "react";
 import { usePageContext } from "@/contexts/PageContext";
 import EventCard from "./EventCard";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 const EventsList = () => {
   const {
     athletes,
     categories,
-    favorites, 
-    addFavorite,
-    removeFavorite,
     getAthletes,
     getCategories
   } = usePageContext();
 
   useEffect(() => {
-    if(!athletes || athletes.length === 0) getAthletes();
-    if(!categories || categories.length === 0) getCategories();
-  }, []);
+    if (!athletes || athletes.length === 0) getAthletes();
+    if (!categories || categories.length === 0) getCategories();
+  }, [athletes, categories, getAthletes, getCategories]);
 
- const handleToggleFavorite  = (item) => {
-  const event = favorites.filter(fav => 
-    fav.athlete === item.name || fav.name === item.name
-  )
-  if(event.length > 0) {
-    removeFavorite(item.name)
-  } else {
-    addFavorite({
-      name: item.name,
-      image: item.Image || "",
-      discipline: item.discipline || item.name,
-    })
-  }
- }
+ //busco el elemento por id y muevo el scroll
+  const moverScroll = (direccion) => {
+    const contenedor = document.getElementById('carrusel-eventos');
+    
+    if (contenedor) {
+      if (direccion === 'izquierda') {
+        contenedor.scrollLeft -= 300;
+      } else {
+        contenedor.scrollLeft += 300;
+      }
+    }
+  };
 
- const checkIsFavorite = (itemName) => {
-  const cardFound = favorites.filter((fav) =>
-  fav.athlete === itemName || fav.name === itemName
-  )
-  return cardFound.length > 0;
- }
+  const allItems = [
+    ...(categories?.slice(0, 3).map(cat => ({ ...cat, type: 'category' })) || []),
+    ...(athletes?.slice(0, 5).map(ath => ({ ...ath, type: 'athlete' })) || [])
+  ];
 
- const handleFavoriteClick = (item) => {
-  if (checkIsFavorite(item.name)) {
-    removeFavorite(item.name)
-  } else {
-    addFavorite({
-      name: item.name, 
-      image: item.Image || "",
-      discipline: item.discipline || item.name,
-    })
-  }
- };
+  if (allItems.length === 0) return null;
 
- return (
-  <section className="w-full py-6 px-4 md:px-0 relative z-10">
-    <h2 className="text-2xl md:text-3-xl font-bold text-[#fefcf4] mb-6">
-      Eventos Olímpicos
-    </h2>
-    <div className="flex gap-4 overflow-x-auto pb-8">
-    {categories && categories.map((cat, index) => (
-      index < 3 && (
-        <div key={`cat-${index}`} className="shrink-0">
-          <EventCard
-          item={cat}
-          type="category"
-          isFavorite={checkIsFavorite(cat.name)}
-          onToggleFavorite={handleFavoriteClick}
-          />
-          </div>
-      )
-    ))}
-    {athletes && athletes.map((ath, index) => (
-      index < 5 && (
-        <div key={`ath-${index}`} className="shrink-0">
-          <EventCard
-          item={ath}
-          type="athlete"
-          isFavorite={checkIsFavorite(ath.name)}
-          onToggleFavorite={handleToggleFavorite}
-          />
-          </div>
-      )
-    ))}
+  return (
+    <section className="relative py-4">
+      <div className="container mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold pt-5  text-[#fefcf4]">
+          Eventos Olímpicos
+        </h2>
       </div>
-  </section>
- )
-}
+
+      <div className="relative group">
+        <button
+          onClick={() => moverScroll('izquierda')}
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 bg-[#272727]/90 hover:bg-[#dac07d] text-[#fefcf4] p-3 rounded-full shadow-xl transition-all opacity-0 group-hover:opacity-100"
+        >
+          <HiChevronLeft className="w-6 h-6 cursor-pointer" />
+        </button>
+
+        <div
+          id="carrusel-eventos"
+          className="flex gap-6 overflow-x-auto py-12 px-4 md:px-8 snap-x snap-mandatory scrollbar-hide scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} 
+        >
+          {allItems.map((item, index) => (
+            <div key={`${item.type}-${item._id}-${index}`}>
+              <EventCard item={item} type={item.type} />
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => moverScroll('derecha')}
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 bg-[#272727]/90 hover:bg-[#dac07d] text-[#fefcf4] p-3 rounded-full shadow-xl transition-all opacity-0 group-hover:opacity-100"
+        >
+          <HiChevronRight className="w-6 h-6 cursor-pointer" />
+        </button>
+      </div>
+    </section>
+  );
+};
 
 export default EventsList;

@@ -3,46 +3,59 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#272727] text-[#feffc4] pt-14 pb-8 w-full mt-auto">
-      <div className="max-w-6xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
-        <div className="flex flex-col gap-4">
+    <footer className="bg-black text-[#fefcf4] py-12 w-full mt-auto border-t border-[#dac07d]/30">
+      {/* CONTENEDOR MAESTRO: Mismo ancho que el resto de la web para alinear */}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+        
+        {/* Columna 1: Logo (Alineado a la izquierda) */}
+        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4">
           <Image
-          src="/imgs/otrologo.png"
-          alt="Logo footer"
-          width={180}
-          height={180}
-          className="opacity-90"
+             src="/imgs/otrologo.png"
+             alt="Logo footer"
+             width={220} 
+             height={80} 
+             className="object-contain"
           />
-          <p className="text-sm text-[#feffc4]/80 leading-relaxed">
-          2025 OlympicHub. Proyecto académico inspirado en el espíritu olímpico.
+          <p className="text-sm text-[#fefcf4]/60 leading-relaxed max-w-xs">
+            2025 OlympicHub. El espíritu olímpico en un solo lugar.
           </p>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <h4 className="font-semibold mb-2 text-[#feffc4]">Suscribite para más novedades olímpicas</h4>
-          <p className="text-sm text-[#dac04d] leading-relaxed">
-            Recibí noticias
-          </p>
-          <form className="flex gap-2 mt-2">
+        {/* Columna 2: Newsletter (Centrado) */}
+        <div className="flex flex-col items-center text-center gap-4">
+          <div>
+            <h4 className="font-bold text-lg text-[#fefcf4]">Novedades Olímpicas</h4>
+            <p className="text-xs text-[#dac07d] font-medium mt-1">
+               Suscribite para recibir noticias.
+            </p>
+          </div>
+          
+          <form className="flex w-full max-w-sm shadow-lg rounded-full overflow-hidden border border-[#333]">
             <input 
-            type="email"
-            placeholder="Tu email"
-            className="flex-1 px-4 py-3 rounded-full text-[#272727] outline-none bg-[#726540]"
+              type="email"
+              placeholder="Tu email..."
+              className="flex-1 px-5 py-3 text-white outline-none bg-[#1a1a1a] placeholder-[#726540] text-sm"
             />
             <button 
-            type="submit"
-            className="bg-[#dac04d] text-[#feffc4] px-5 py-3 rounded-r-full hover:bg-[#726540] transition-colors">
+              type="submit"
+              className="bg-[#dac07d] text-[#1a1a1a] px-6 py-3 hover:bg-[#bfa25f] transition-colors font-bold text-sm uppercase tracking-wide"
+            >
               Enviar
             </button>
           </form>
         </div>
 
-        <div className="flex flex-col gap-3 justify-center">
-          <h3 className="font-semibold mb-2 text-[#feffc4]">Créditos</h3>
-          <p className="text-sm text-[#feffc4]/70 leading-relaxed">
-          Nicolás Cortese - Todos los Derechos Reservados.
+        {/* Columna 3: Créditos (Alineado a la derecha) */}
+        <div className="flex flex-col items-center md:items-end text-center md:text-right gap-1">
+          <h3 className="font-bold text-lg text-[#fefcf4]">Créditos</h3>
+          <p className="text-sm text-[#fefcf4]/60">
+            Nicolás Cortese
+          </p>
+          <p className="text-[10px] text-[#fefcf4]/30 mt-4">
+            © 2025 Todos los derechos reservados.
           </p>
         </div>
+        
       </div>
     </footer>
   );

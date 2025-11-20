@@ -90,12 +90,14 @@ const Sidebar = () => {
               <FaChevronRight className="text-[#dac07d] group-hover:text-[#1a1a1a] text-xs" />
             </li>
             </Link>
+            <Link href="/about" onClick={toggleSidebar}>
             <li className="flex justify-between items-center p-3 rounded-lg cursor-pointer hover:bg-[#dac07d] transition-all group">
               <span className="font-medium group-hover:text-[#1a1a1a]">
                 About
               </span>
               <FaChevronRight className="text-[#dac07d] group-hover:text-[#1a1a1a] text-xs" />
             </li>
+            </Link>
           </ul>
         </div>
       </aside>

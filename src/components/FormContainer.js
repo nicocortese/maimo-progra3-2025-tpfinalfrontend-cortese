@@ -4,57 +4,58 @@ import React from "react";
 import { Formik, Form, Field } from "formik";
 import { usePageContext } from "@/contexts/PageContext";
 
-// Validaciones simplificadas
 function validateName(value) {
-  let error;
-  if (!value) error = "El nombre es requerido";
-  return error;
+  if (!value) return "El nombre es requerido";
 }
-
 function validateSurname(value) {
-  let error;
-  if (!value) error = "El apellido es requerido";
-  return error;
+  if (!value) return "El apellido es requerido";
 }
-
 function validateEmail(value) {
-  let error;
-  if (!value) {
-    error = "El email es requerido";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-    error = "Email inválido";
-  }
-  return error;
+  if (!value) return "El email es requerido";
+  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value))
+    return "Email inválido";
 }
 
-export const FormContainer = () => {
-  const { addFavorite } = usePageContext();
+export const FormContainer = ({ showModal }) => {
+  const { favorites, createOrder } = usePageContext();
 
-  const handleAddFavorite = async (values, { resetForm }) => {
-    await addFavorite({
-      name: values.name,
-      discipline: values.surname,
-      image: "https://via.placeholder.com/150", // placeholder
-    });
-    resetForm();
+  const handleSubmitForm = async (values, { resetForm }) => {
+    if (favorites.length === 0) {
+      showModal("Agrega al menos un favorito antes de finalizar");
+      return;
+    }
+
+    const orderData = {
+      order: { 
+        name: values.name,
+        surname: values.surname,
+        email: values.email,
+      },
+      favorites,
+    };
+
+    try {
+      await createOrder(orderData);
+      resetForm();
+      showModal("¡Registro finalizado con tus favoritos!");
+    } catch (error) {
+      showModal("Error al guardar el registro. Intenta nuevamente");
+      console.error(error);
+    }
   };
 
   return (
     <div className="flex items-center justify-center">
       <div className="bg-[#272727] p-8 rounded-2xl shadow-2xl w-full max-w-md mx-auto">
         <h2 className="text-3xl font-bold mb-6 text-[#DAC07D] text-center uppercase">
-          Datos del comprador
+          Datos del participante
         </h2>
 
         <Formik
-          initialValues={{
-            name: "",
-            surname: "",
-            email: "",
-          }}
-          onSubmit={handleAddFavorite}
+          initialValues={{ name: "", surname: "", email: "" }}
+          onSubmit={handleSubmitForm}
         >
-          {({ errors, touched, values }) => (
+          {({ errors, touched }) => (
             <Form className="flex flex-col gap-4">
               <div>
                 <label className="block text-sm mb-2 font-semibold text-[#FEFCF4]">
@@ -63,8 +64,6 @@ export const FormContainer = () => {
                 <Field
                   name="name"
                   validate={validateName}
-                  value={values.name || ""}
-                  required
                   className="w-full px-4 py-3 rounded-lg bg-[#dac07d] border border-[#726540] focus:border-[#FEFCF4] focus:outline-none text-[#FEFCF4]"
                 />
                 {errors.name && touched.name && (
@@ -79,12 +78,10 @@ export const FormContainer = () => {
                 <Field
                   name="surname"
                   validate={validateSurname}
-                  value={values.surname || ""}
-                  required
                   className="w-full px-4 py-3 rounded-lg bg-[#dac07d] border border-[#726540] focus:border-[#FEFCF4] focus:outline-none text-[#FEFCF4]"
                 />
                 {errors.surname && touched.surname && (
-                  <div className="text-r[#fefcf4] text-sm mt-1">{errors.surname}</div>
+                  <div className="text-[#fefcf4] text-sm mt-1">{errors.surname}</div>
                 )}
               </div>
 
@@ -96,8 +93,6 @@ export const FormContainer = () => {
                   name="email"
                   type="email"
                   validate={validateEmail}
-                  value={values.email || ""}
-                  required
                   className="w-full px-4 py-3 rounded-lg bg-[#dac07d] border border-[#726540] focus:border-[#FEFCF4] focus:outline-none text-[#FEFCF4]"
                 />
                 {errors.email && touched.email && (
@@ -107,7 +102,7 @@ export const FormContainer = () => {
 
               <button
                 type="submit"
-                className="cursor-pointermt-6 bg-[#726540] hover:bg-[#DAC07D] text-[#FEFCF4] font-bold py-3 rounded-lg text-lg transition-transform duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
+                className="mt-6 bg-[#726540] hover:bg-[#DAC07D] text-[#FEFCF4] font-bold py-3 rounded-lg text-lg transition-transform duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
               >
                 Finalizar inscripción
               </button>

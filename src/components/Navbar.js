@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { usePageContext } from "@/contexts/PageContext";
 import { HiBars3 } from "react-icons/hi2";
 
 
 export default function Navbar () {
   const {toggleSidebar} = usePageContext();
+
   return (
     <nav className="fixed top-0 left-0 w-full h-20 bg-[#FEFCF4] z-40 flex items-center justify-between px-6 shadow-sm">
       <button
@@ -16,6 +18,7 @@ export default function Navbar () {
         <HiBars3 className="w-8 h-8 cursor-pointer "/>
         </button>
       <div className="absolute left-1/2 transform -translate-x-1/2 pt-2">
+      <Link href="/">
         <Image
         src="/imgs/logovariante.png"
         alt="Logo"
@@ -25,6 +28,7 @@ export default function Navbar () {
         className="object-contain"
         
         />
+        </Link>
       </div>
     </nav>
   )
