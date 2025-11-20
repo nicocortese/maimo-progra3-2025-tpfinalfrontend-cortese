@@ -25,31 +25,26 @@ const AthleteGrid = () => {
           let disciplineImg = null;
           let countryImg = null;
           
-          // Normalizamos el nombre del país para comparar (minúsculas y sin espacios)
           const athleteCountry = (athlete.country || "").trim().toLowerCase();
 
-          // --- LÓGICA SIMPLE PARA FOTOS ---
           if (athlete.categories && athlete.categories.length > 0) {
             athlete.categories.forEach(item => {
               
-              // Paso A: Intentamos obtener la categoría real
               let categoryData = null;
 
-              // Si el item ya tiene nombre, úsalo. Si no, búscalo por ID en la lista global.
               if (item.name) {
                 categoryData = item;
               } else if (categories) {
                 categoryData = categories.find(c => c._id === item);
               }
 
-              // Paso B: Si tenemos datos, asignamos la imagen
               if (categoryData && categoryData.name) {
                 const catName = categoryData.name.trim().toLowerCase();
 
                 if (catName === athleteCountry) {
-                  countryImg = categoryData.image; // Es la bandera
+                  countryImg = categoryData.image; 
                 } else {
-                  disciplineImg = categoryData.image; // Es la disciplina (Automático)
+                  disciplineImg = categoryData.image; 
                 }
               }
             });
