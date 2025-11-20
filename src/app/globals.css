@@ -5,11 +5,14 @@
   --foreground: #171717;
 }
 
+/* Configuración de Tailwind v4 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* Asignamos las variables de Next.js a las utilidades de Tailwind */
+  --font-sans: var(--font-blinker), sans-serif; /* Para clases font-sans */
+  --font-heading: var(--font-bolde), sans-serif; /* Para clases font-heading (personalizada) */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,18 +25,13 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-blinker), sans-serif; 
 }
 
-li {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-bolde), sans-serif;
 }
 
-
-
-/*Paleta de colores:
-#272727
-#726540
-#DAC07D
-#FEFCF4
-*/
+button {
+  font-family: var(--font-bolde), sans-serif;
+}

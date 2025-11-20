@@ -35,17 +35,20 @@ export const PageContextProvider = ({ children }) => {
     }
   }, [API_URL]);
 
-  const getOneAthlete = useCallback(async (id) => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_URL}/athletes/${id}`);
-      setAthlete(res.data.athlete);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [API_URL]);
+  const getOneAthlete = useCallback(
+    async (id) => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${API_URL}/athletes/${id}`);
+        setAthlete(res.data.athlete);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [API_URL]
+  );
 
   const getCategories = useCallback(async () => {
     try {
@@ -62,7 +65,7 @@ export const PageContextProvider = ({ children }) => {
   const addFavorite = useCallback((favoriteItem) => {
     setFavorites((prev) => {
       // Evitar duplicados
-      if (prev.some(f => f._id === favoriteItem._id)) return prev;
+      if (prev.some((f) => f._id === favoriteItem._id)) return prev;
       return [...prev, favoriteItem];
     });
   }, []);
@@ -71,9 +74,12 @@ export const PageContextProvider = ({ children }) => {
     setFavorites((prev) => prev.filter((fav) => fav._id !== favoriteId));
   }, []);
 
-  const createOrder = useCallback(async (orderData) => {
-    await axios.post(`${API_URL}/orders`, orderData);
-  }, [API_URL]);
+  const createOrder = useCallback(
+    async (orderData) => {
+      await axios.post(`${API_URL}/orders`, orderData);
+    },
+    [API_URL]
+  );
 
   useEffect(() => {
     getAthletes();
